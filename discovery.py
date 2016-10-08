@@ -15,24 +15,22 @@ class Server:
 		    print("received message:", data)		
 		
 
-def discover(server, port, message):
+def discover(port, message):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-	sock.sendto(message.encode(), (server, port))
+	sock.sendto(message.encode(), ("255.255.255.255", port))
 		
 
 @click.command()
 @click.option("-s","--server", is_flag=True, default=False)
-@click.option("-h","--host", default="10.2.0.10")
 @click.option("-p","--port", default=5005)
 @click.option("-m","--message", default="No message")
-def main(server, host, port, message):
+def main(server, port, message):
 	if server:
 		Server(port).run();
 	else:
-		print("UDP target: {}:{}".format(host, port))
 		print("message:", message)
-		discover(host, port, message);
+		discover(port, message);
 
 
 if __name__ == '__main__':
